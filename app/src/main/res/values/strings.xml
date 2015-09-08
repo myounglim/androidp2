@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_detail">MovieDetail</string>
+
+    <!-- Label for the movie sorting preference [CHAR LIMIT=30] -->
+    <string name="pref_sort_label">Sort By</string>
+
+    <string name="pref_sort_key" translatable="false">sort</string>
+
+    <string name="pref_sort_label_popular">Most Popular</string>
+
+    <string name="pref_sort_label_toprated">Top Rated</string>
+
+    <string name="pref_sort_popular">popular</string>
+
+    <string name="pref_sort_toprated">rated</string>
+
+</resources>
