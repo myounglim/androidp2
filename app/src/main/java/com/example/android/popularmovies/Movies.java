@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 
 /**
- * Created by student on 9/1/15.
+ * Movies class for storing the JSON data like imageurl, moviename, releaseDate, userRating, and plot summary.
  */
 public class Movies implements Parcelable, Comparable<Movies> {
     String image;
@@ -38,14 +38,6 @@ public class Movies implements Parcelable, Comparable<Movies> {
         this.summary = summary;
     }
 
-    public void setAll(String img, String name, String releaseDate, String userRating, String summary){
-        this.setImage(img);
-        this.setName(name);
-        this.setDate(releaseDate);
-        this.setRating(userRating);
-        this.setSummary(summary);
-    }
-
     public String getImageUrl(){
         return this.image;
     }
@@ -61,10 +53,16 @@ public class Movies implements Parcelable, Comparable<Movies> {
     public String getMovieSummary(){
         return this.summary;
     }
+
+    /*
+        *Parses the year of release from the releaseDate found in the Json.
+        *Dates are formatted like so: YYYY-MM-DD so the year is located at the 0th index
+     */
     public String getYear(){
+        int yearPosition = 0;
         String delims = "[-]";
         String[] tokens = this.getReleaseDate().split(delims);
-        return tokens[0];
+        return tokens[yearPosition];
     }
 
     @Override

@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 /**
- * Created by student on 9/1/15.
+ * MovieAdapter for use to populate a gridview of images
  */
 public class MovieAdapter extends ArrayAdapter<Movies> {
     public MovieAdapter(Context context, List<Movies> moviesList) {
@@ -21,7 +21,7 @@ public class MovieAdapter extends ArrayAdapter<Movies> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final String baseURL = "http://image.tmdb.org/t/p/w185";
+        final String baseURL = "http://image.tmdb.org/t/p/w185";    //each movie thumbnail image is located at this URL(which includes the size, w185) + imageURL read from the JSON
         Movies movies = this.getItem(position);
 
         if(convertView == null) {
@@ -29,12 +29,11 @@ public class MovieAdapter extends ArrayAdapter<Movies> {
         }
         ImageView moviePoster = (ImageView) convertView.findViewById(R.id.griditem_movie_imageview);
         moviePoster.setMinimumHeight(MoviePosterFragment.deviceHeight / 2);
-        if(moviePoster != null){
+        if(moviePoster != null && movies.getImageUrl() != null ){
             Picasso.with(getContext())
                     .load(baseURL + movies.getImageUrl())
                     .into(moviePoster);
         }
         return convertView;
-        //return super.getView(position, convertView, parent);
     }
 }

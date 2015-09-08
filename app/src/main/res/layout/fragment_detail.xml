@@ -1,3 +1,4 @@
+<!--This is not finalized yet so will be making some tweaks to look more like the mock for p2-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,8 +15,7 @@
         android:textSize="36sp"
         android:textColor="#FFF"
         android:background="#26A69A"
-        android:paddingLeft="24dp"
-        android:text="Hello World"/>
+        android:paddingLeft="24dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -30,8 +30,7 @@
             android:paddingLeft="24dp"
             android:layout_marginRight="16dp"
             android:layout_alignParentLeft="true"
-            android:adjustViewBounds="true"
-            android:src="@drawable/poster"/>
+            android:adjustViewBounds="true" />
         <TextView
             android:id="@+id/release_year"
             android:layout_width="wrap_content"

@@ -19,7 +19,11 @@ import java.net.URL;
 import java.util.Arrays;
 
 /**
- * Created by student on 9/6/15.
+ * Reads in popular movies from the moviedb api. I query this URL: http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=[]
+ * to retrieve the most popular movies. In the future may need to implement for other queries as well.
+ *
+ * !IMPORTANT Most of the code found here is from Udacity's Android Fundamentals for the Sunshine App. The set up is the same but with differences in
+ * the api query and the json parsing.
  */
 public class MovieJsonReader {
     private final String LOG_TAG = MovieJsonReader.class.getSimpleName();
@@ -38,10 +42,10 @@ public class MovieJsonReader {
         // Will contain the raw JSON response as a string.
         String movieJsonStr = null;
 
-        String myAPI_KEY = "e424af02c2bdff3412a3bcee47e71395";
+        String myAPI_KEY = "";
 
         //sample api call
-        //http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=e424af02c2bdff3412a3bcee47e71395
+        //http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=[]
 
         //image poster path sample
         //http://image.tmdb.org/t/p/w185/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
@@ -62,7 +66,7 @@ public class MovieJsonReader {
 
             URL url = new URL(builtUri.toString());
 
-            Log.v(LOG_TAG, "Built URI " + builtUri.toString());
+            //Log.v(LOG_TAG, "Built URI " + builtUri.toString());
 
             // Create the request to OpenWeatherMap, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -92,7 +96,7 @@ public class MovieJsonReader {
             }
             movieJsonStr = buffer.toString();
 
-            Log.v(LOG_TAG, "Forecast string: " + movieJsonStr);
+            //Log.v(LOG_TAG, "Forecast string: " + movieJsonStr);
         }catch(IOException e){
             Log.e(LOG_TAG, "Error ", e);
             // If the code didn't successfully get the weather data, there's no point in attemping
@@ -149,7 +153,7 @@ public class MovieJsonReader {
 
 
         for(int i = 0; i < resultsArray.length(); i++) {
-            // Get the JSON object representing the day
+            // Get the JSON object for each movie
             JSONObject movieObject = resultsArray.getJSONObject(i);
 
             String imageURL = movieObject.getString(POSTER_IMAGE);
@@ -158,12 +162,11 @@ public class MovieJsonReader {
             String userRating = movieObject.getString(USER_RATING);
             String releaseDate = movieObject.getString(RELEASE_DATE);
 
-
-            Log.v(LOG_TAG, "IMAGE URL : " + imageURL);
-            Log.v(LOG_TAG, "MOVIE NAME: " + name);
-            Log.v(LOG_TAG, "Synopsis : " + summary);
-            Log.v(LOG_TAG, "User Rating: " + userRating);
-            Log.v(LOG_TAG, "Release Date : " + releaseDate);
+            //Log.v(LOG_TAG, "IMAGE URL : " + imageURL);
+            //Log.v(LOG_TAG, "MOVIE NAME: " + name);
+            //Log.v(LOG_TAG, "Synopsis : " + summary);
+            //Log.v(LOG_TAG, "User Rating: " + userRating);
+            //Log.v(LOG_TAG, "Release Date : " + releaseDate);
 
             movieResults[i] = new Movies(imageURL, name, releaseDate, userRating, summary);
         }
@@ -171,15 +174,14 @@ public class MovieJsonReader {
                 PreferenceManager.getDefaultSharedPreferences(movieFragmentContext);
         String sortBy = preferences.getString(movieFragmentContext.getString(R.string.pref_sort_key),
                 movieFragmentContext.getString(R.string.pref_sort_popular));
-        Log.v(LOG_TAG, "Sort by String: " + sortBy);
-        Log.v(LOG_TAG, "R string toprated: " + movieFragmentContext.getString(R.string.pref_sort_toprated));
-        Log.v(LOG_TAG, "R string popular: " + movieFragmentContext.getString(R.string.pref_sort_popular));
         if(sortBy.equals(movieFragmentContext.getString(R.string.pref_sort_toprated))){
-            Log.v(LOG_TAG, "I'M SORTING NOW");
-            Arrays.sort(movieResults);
+            //Log.v(LOG_TAG, "I'M SORTING NOW");
+            Arrays.sort(movieResults); //sorting by highest to lowest user ratings(descending order) using the comparable interface
         }
+        /*
         else
             Log.v(LOG_TAG, "I'M NOT SORTING");
+        */
         return movieResults;
 
     } //end of getMovieDataFromJson

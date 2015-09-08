@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso;
 
 
 /**
- * A placeholder fragment containing a simple view.
+ * Details when the user clicks on a specific movie. A lot of the formatting will be changed for p2
  */
 public class DetailActivityFragment extends Fragment {
 

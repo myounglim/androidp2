@@ -1,48 +1,27 @@
 package com.example.android.popularmovies;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Movie;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.text.format.Time;
-import android.util.DisplayMetrics;
+
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ListView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 
 /**
- * A placeholder fragment containing a simple view.
+ * The fragment for the home screen page displaying all the movies
  */
 public class MoviePosterFragment extends Fragment {
 
-    private MovieAdapter movieAdapter;
-    public static int deviceHeight;
+    private MovieAdapter movieAdapter; //the adapter to populate the gridview in fragment_main
+    public static int deviceHeight; //the deviceheight in order to set the minimum height for each movie poster image(look at movieadapter.java)
+    private final String LOG_TAG = MoviePosterFragment.class.getSimpleName(); //for logging/debugging purposes
 
     public MoviePosterFragment() {
     }
@@ -65,7 +44,7 @@ public class MoviePosterFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        // Get a reference to the ListView, and attach this adapter to it.
+        // Get a reference to the GridView, and attach this adapter to it.
         GridView gridView = (GridView) rootView.findViewById(R.id.gridview_movies);
         gridView.setAdapter(movieAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -74,7 +53,7 @@ public class MoviePosterFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Movies movie = movieAdapter.getItem(position);
                 Intent detailIntent = new Intent(MoviePosterFragment.this.getActivity(), DetailActivity.class);
-                detailIntent.putExtra(Intent.EXTRA_TEXT, movie);
+                detailIntent.putExtra(Intent.EXTRA_TEXT, movie); //movies class uses the parcelable interface to pass objects in an intent
                 startActivity(detailIntent);
             }
         });
@@ -89,6 +68,7 @@ public class MoviePosterFragment extends Fragment {
 
     @Override
     public void onStart(){
+        //Log.v(LOG_TAG, "onStart method is called");
         super.onStart();
         updateMovieData();
     }
@@ -101,7 +81,7 @@ public class MoviePosterFragment extends Fragment {
         @Override
         protected Movies[] doInBackground(Void... params) {
             MovieJsonReader jsonReader = new MovieJsonReader(getActivity());
-            return jsonReader.setUpConnection();
+            return jsonReader.setUpConnection(); //returns an array of movies from the moviedb api (refer to Movies.java and MovieJsonReader.java)
         } //end of doInBackground
 
         @Override
@@ -111,7 +91,7 @@ public class MoviePosterFragment extends Fragment {
                 for (Movies movies : results) {
                     movieAdapter.add(movies);
                 }
-                //mForecastAdapter.addAll(results);
+                //movieAdapter.addAll(results);
             }
         } //end of onPostExecute
 
