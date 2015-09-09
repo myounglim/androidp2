@@ -35,6 +35,8 @@ public class DetailActivityFragment extends Fragment {
             if(thumbnail != null){
                 Picasso.with(getActivity())
                         .load(baseURL + movie.getImageUrl())
+                        .placeholder(R.drawable.user_placeholder)
+                        .error(R.drawable.error_placeholder)
                         .into(thumbnail);
             }
             ((TextView) rootView.findViewById(R.id.release_year)).setText(movie.getYear());

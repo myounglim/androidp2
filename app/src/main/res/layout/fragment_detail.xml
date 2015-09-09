@@ -11,74 +11,89 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.20"
-        android:gravity="center_vertical"
-        android:textSize="36sp"
-        android:textColor="#FFF"
         android:background="#26A69A"
-        android:paddingLeft="24dp" />
+        android:gravity="center_vertical"
+        android:paddingLeft="24dp"
+        android:textColor="#FFF"
+        android:textSize="36sp" />
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.45"
-        android:layout_marginTop="16dp">
+        android:fillViewport="true">
 
-        <ImageView
-            android:id="@+id/image_poster"
-            android:layout_width="@android:dimen/thumbnail_width"
-            android:layout_height="wrap_content"
-            android:paddingLeft="24dp"
-            android:layout_marginRight="16dp"
-            android:layout_alignParentLeft="true"
-            android:adjustViewBounds="true" />
-        <TextView
-            android:id="@+id/release_year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:textAppearanceLarge"
-            android:layout_toRightOf="@id/image_poster"
-            android:textColor="#26A69A"
-            android:text="Release Year"/>
-        <TextView
-            android:id="@+id/user_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:textAppearanceLarge"
-            android:layout_marginTop="8dp"
-            android:layout_toRightOf="@id/image_poster"
-            android:layout_below="@id/release_year"
-            android:textColor="#009688"
-            android:text="User Rating"/>
-        <TextView
-            android:id="@+id/release_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:layout_marginTop="8dp"
-            android:layout_toRightOf="@id/image_poster"
-            android:layout_below="@id/user_rating"
-            android:textColor="#9E9E9E"
-            android:text="Release date"/>
-        <Button
-            android:layout_marginTop="8dp"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/image_poster"
-            android:layout_below="@id/release_date"
-            android:background="#80CBC4"
-            android:textColor="#78909C"
-            android:text="Mark as Favorite">
-        </Button>
-    </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="16dp">
 
-    <TextView
-        android:id="@+id/summary"
+            <ImageView
+                android:id="@+id/image_poster"
+                android:layout_width="@android:dimen/thumbnail_width"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="16dp"
+                android:adjustViewBounds="true"
+                android:paddingLeft="24dp" />
+
+            <TextView
+                android:id="@+id/release_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/image_poster"
+                android:text="Release Year"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="#26A69A" />
+
+            <TextView
+                android:id="@+id/user_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/release_year"
+                android:layout_marginTop="8dp"
+                android:layout_toRightOf="@id/image_poster"
+                android:text="User Rating"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="#009688" />
+
+            <TextView
+                android:id="@+id/release_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/user_rating"
+                android:layout_marginTop="8dp"
+                android:layout_toRightOf="@id/image_poster"
+                android:text="Release date"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="#9E9E9E" />
+
+            <Button
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/release_date"
+                android:layout_marginTop="8dp"
+                android:layout_toRightOf="@id/image_poster"
+                android:background="#80CBC4"
+                android:text="Mark as Favorite"
+                android:textColor="#78909C"></Button>
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_weight="0.35"
-        android:text="Plot Summary"/>
+        android:layout_weight="0.35">
+
+        <TextView
+            android:id="@+id/summary"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="Plot Summary" />
+    </ScrollView>
 
 
 </LinearLayout>

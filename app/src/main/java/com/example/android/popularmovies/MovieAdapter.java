@@ -32,6 +32,8 @@ public class MovieAdapter extends ArrayAdapter<Movies> {
         if(moviePoster != null && movies.getImageUrl() != null ){
             Picasso.with(getContext())
                     .load(baseURL + movies.getImageUrl())
+                    .placeholder(R.drawable.user_placeholder)
+                    .error(R.drawable.error_placeholder)
                     .into(moviePoster);
         }
         return convertView;

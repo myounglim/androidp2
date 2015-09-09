@@ -68,7 +68,7 @@ public class MovieJsonReader {
 
             //Log.v(LOG_TAG, "Built URI " + builtUri.toString());
 
-            // Create the request to OpenWeatherMap, and open the connection
+            // Open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
