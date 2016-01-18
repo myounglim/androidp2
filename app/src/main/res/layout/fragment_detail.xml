@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.android.popularmovies.DetailActivityFragment">
+    tools:context="com.example.android.popularmovies.DetailFragment">
 
     <TextView
         android:id="@+id/movie_title"

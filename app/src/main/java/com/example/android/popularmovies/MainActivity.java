@@ -10,10 +10,27 @@ import android.view.MenuItem;
 
 public class MainActivity extends ActionBarActivity {
 
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private final String MOVIEFRAGMENT_TAG = "MFTAG";
+
+    private boolean mSortByRating;
+
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_main);
+//    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSortByRating = Utility.sortByRatings(this);
         setContentView(R.layout.activity_main);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, new MovieFragment(), MOVIEFRAGMENT_TAG)
+                    .commit();
+        }
     }
 
 
@@ -38,6 +55,20 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        boolean sort = Utility.sortByRatings(this);
+        // update the location in our second pane using the fragment manager
+        if (sort != mSortByRating) {
+            MovieFragment mf = (MovieFragment)getSupportFragmentManager().findFragmentByTag(MOVIEFRAGMENT_TAG);
+            if ( null != mf ) {
+                mf.onSortChanged();
+            }
+            mSortByRating = sort;
+        }
     }
 
 }

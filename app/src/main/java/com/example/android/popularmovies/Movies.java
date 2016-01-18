@@ -13,13 +13,15 @@ public class Movies implements Parcelable, Comparable<Movies> {
     String releaseDate;
     String userRating;
     String summary;
+    long movie_id;
 
-    public Movies(String img, String name, String releaseDate, String userRating, String summary){
+    public Movies(String img, String name, String releaseDate, String userRating, String summary, long movie_id){
         this.image = img;
         this.name = name;
         this.releaseDate = releaseDate;
         this.userRating = userRating;
         this.summary = summary;
+        this.movie_id = movie_id;
     }
 
     public void setImage(String img){
@@ -37,6 +39,9 @@ public class Movies implements Parcelable, Comparable<Movies> {
     public void setSummary(String summary){
         this.summary = summary;
     }
+    public void setMovieId(long id){
+        this.movie_id = id;
+    }
 
     public String getImageUrl(){
         return this.image;
@@ -52,6 +57,9 @@ public class Movies implements Parcelable, Comparable<Movies> {
     }
     public String getMovieSummary(){
         return this.summary;
+    }
+    public long getMovieId(){
+        return this.movie_id;
     }
 
     /*
@@ -72,14 +80,20 @@ public class Movies implements Parcelable, Comparable<Movies> {
     }
 
     /* everything below here is for implementing Parcelable */
-    public Movies(Parcel in){
-        String[] movieData = new String[5];
-        in.readStringArray(movieData);
-        this.image = movieData[0];
-        this.name = movieData[1];
-        this.releaseDate = movieData[2];
-        this.userRating = movieData[3];
-        this.summary = movieData[4];
+    private Movies(Parcel in){
+//        String[] movieData = new String[5];
+//        in.readStringArray(movieData);
+//        this.image = movieData[0];
+//        this.name = movieData[1];
+//        this.releaseDate = movieData[2];
+//        this.userRating = movieData[3];
+//        this.summary = movieData[4];
+        this.image = in.readString();
+        this.name = in.readString();
+        this.releaseDate = in.readString();
+        this.userRating = in.readString();
+        this.summary = in.readString();
+        this.movie_id = in.readLong();
 
     }
 
@@ -88,11 +102,17 @@ public class Movies implements Parcelable, Comparable<Movies> {
     }
 
     public void writeToParcel(Parcel out, int flags) {
-        out.writeStringArray(new String[]{this.image,
-                this.name,
-                this.releaseDate,
-                this.userRating,
-                this.summary});
+//        out.writeStringArray(new String[]{this.image,
+//                this.name,
+//                this.releaseDate,
+//                this.userRating,
+//                this.summary});
+        out.writeString(this.image);
+        out.writeString(this.name);
+        out.writeString(this.releaseDate);
+        out.writeString(this.userRating);
+        out.writeString(this.summary);
+        out.writeLong(this.movie_id);
     }
 
     public static final Parcelable.Creator<Movies> CREATOR = new Parcelable.Creator<Movies>() {
