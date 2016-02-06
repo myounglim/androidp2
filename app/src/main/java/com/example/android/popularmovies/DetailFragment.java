@@ -1,6 +1,8 @@
 package com.example.android.popularmovies;
 
 import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,11 +13,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.widget.Toast;
 
 import com.example.android.popularmovies.data.MovieContract;
 import com.squareup.picasso.Picasso;
@@ -24,7 +28,9 @@ import com.squareup.picasso.Picasso;
 /**
  * Details when the user clicks on a specific movie. A lot of the formatting will be changed for p2
  */
-public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
+
+    private final String LOG_TAG = DetailFragment.class.getSimpleName();
 
     private static final int DETAIL_LOADER = 0;
     Uri mUri;
@@ -55,15 +61,33 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     static final int COL_TRAILER_PATH = 8;
     static final int COL_REVIEW_PATH = 9;
 
+
+    private TextView mTitleView;
+    private ImageView mThumbnailView;
+    private TextView mYearView;
+    private TextView mRatingView;
+    private TextView mDateView;
+    private TextView mSummaryView;
+
     public DetailFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        mThumbnailView = (ImageView) rootView.findViewById(R.id.image_poster);
+        mTitleView = (TextView) rootView.findViewById(R.id.movie_title);
+        mYearView = (TextView) rootView.findViewById(R.id.release_year);
+        mRatingView = (TextView) rootView.findViewById(R.id.user_rating);
+        mDateView = (TextView) rootView.findViewById(R.id.release_date);
+        mSummaryView = (TextView) rootView.findViewById(R.id.summary);
+
         mUri = getActivity().getIntent().getData();
         if(mUri != null)
             updateDetailTable();
+
+        Button favoriteButton = (Button) rootView.findViewById(R.id.favorite_button);
+        favoriteButton.setOnClickListener(this);
         return rootView;
     }
 
@@ -112,26 +136,49 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         if (!data.moveToFirst()) { return; }
 
-        TextView detailTextView = (TextView)getView().findViewById(R.id.movie_title);
-        detailTextView.setText(data.getString(COL_MOVIE_TITLE));
+        mTitleView.setText(data.getString(COL_MOVIE_TITLE));
 
-        ImageView thumbnail = (ImageView) getView().findViewById(R.id.image_poster);
+        //ImageView thumbnail = (ImageView) getView().findViewById(R.id.image_poster);
         Picasso.with(getActivity())
                         .load(baseURL + data.getString(COL_POSTER_PATH))
                         .placeholder(R.drawable.user_placeholder)
                         .error(R.drawable.error_placeholder)
-                        .into(thumbnail);
+                        .into(mThumbnailView);
 
-        ((TextView) getView().findViewById(R.id.release_year)).setText(data.getString(COL_TRAILER_PATH));
-        ((TextView) getView().findViewById(R.id.user_rating)).setText(Double.toString(data.getDouble(COL_USER_RATING)));
-        ((TextView) getView().findViewById(R.id.release_date)).setText(data.getString(COL_RELEASE_DATE));
-        ((TextView) getView().findViewById(R.id.summary)).setText(data.getString(COL_MOVIE_SYNOPSIS));
+        mYearView.setText(data.getString(COL_RELEASE_DATE));
+        mRatingView.setText(Double.toString(data.getDouble(COL_USER_RATING)));
+        mDateView.setText(data.getString(COL_RELEASE_DATE));
+        mSummaryView.setText(data.getString(COL_MOVIE_SYNOPSIS));
 
-
+        Log.v(LOG_TAG, data.getString(COL_MOVIE_TITLE) + " Trailers: " + data.getString(COL_TRAILER_PATH));
+        Log.v(LOG_TAG, data.getString(COL_MOVIE_TITLE) + " Reviews: " + data.getString(COL_REVIEW_PATH));
+        while(data.moveToNext()){
+            Log.v(LOG_TAG, "NEXT");
+            Log.v(LOG_TAG, data.getString(COL_MOVIE_TITLE) + " Trailers: " + data.getString(COL_TRAILER_PATH));
+            Log.v(LOG_TAG, data.getString(COL_MOVIE_TITLE) + " Reviews: " + data.getString(COL_REVIEW_PATH));
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.favorite_button: {
+                Toast.makeText(getActivity(), "Favorited!", Toast.LENGTH_SHORT).show();
+                addToFavorites();
+            }
+        }
+    }
+
+    private void addToFavorites(){
+        long movieId = MovieContract.MovieDetail.getMovieIdFromUri(mUri);
+        Uri favoritesUri = MovieContract.MovieGeneral.buildFavoritesUri();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MovieContract.MovieGeneral.COLUMN_USER_FAVORITES, Integer.parseInt(MovieContract.MovieGeneral.MOVIE_FAVORITE_ARG));
+        getActivity().getContentResolver().update(favoritesUri,contentValues, null, new String[]{Long.toString(movieId)});
     }
 }

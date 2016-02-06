@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class MovieDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 8;
 
     static final String DATABASE_NAME = "movie.db";
 
@@ -57,9 +57,13 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY (" + MovieContract.MovieDetail.COLUMN_GENERAL_KEY + ") REFERENCES " +
                 MovieContract.MovieGeneral.TABLE_NAME + " (" + MovieContract.MovieGeneral._ID + ") ON DELETE CASCADE ON UPDATE CASCADE);";
 
+//                "UNIQUE (" + MovieContract.MovieDetail.COLUMN_TRAILER_PATH + ") ON CONFLICT IGNORE, " + //UNIQUE (TRAILER_PATH) ON CONFLICT IGNORE, UNIQUE (REVIEW_PATH) ON CONFLICT IGNORE
+//                "UNIQUE (" + MovieContract.MovieDetail.COLUMN_REVIEW_PATH + ") ON CONFLICT IGNORE);";
+
                 // To assure the application have just one weather entry per day
                 // per location, it's created a UNIQUE constraint with REPLACE strategy
                 //"UNIQUE (" + MovieContract.MovieDetail.COLUMN_GENERAL_KEY + ") ON CONFLICT REPLACE);";
+
 
         db.execSQL(SQL_CREATE_MOVIE_TABLE);
         db.execSQL(SQL_CREATE_DETAIL_TABLE);

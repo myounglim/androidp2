@@ -13,8 +13,12 @@
 
     <string name="pref_sort_label_toprated">Top Rated</string>
 
+    <string name="pref_sort_label_favorites">Favorites</string>
+
     <string name="pref_sort_popular" translatable="false">popular</string>
 
     <string name="pref_sort_toprated" translatable="false">rated</string>
+
+    <string name="pref_sort_favorites" translatable="false">favorite</string>
 
 </resources>

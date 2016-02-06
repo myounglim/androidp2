@@ -1,50 +1,52 @@
 <!--This is not finalized yet so will be making some tweaks to look more like the mock for p2-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.android.popularmovies.DetailFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.example.android.popularmovies.DetailFragment">
+    android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/movie_title"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.20"
-        android:background="#26A69A"
-        android:gravity="center_vertical"
-        android:paddingLeft="24dp"
-        android:textColor="#FFF"
-        android:textSize="36sp" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.45"
-        android:fillViewport="true">
+        <TextView
+            android:id="@+id/movie_title"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@color/teal_400"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:textColor="@color/white"
+            android:textSize="36sp"
+            tools:text="Chappie" />
+
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="16dp">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp">
 
             <ImageView
                 android:id="@+id/image_poster"
                 android:layout_width="@android:dimen/thumbnail_width"
-                android:layout_height="wrap_content"
+                android:layout_height="@android:dimen/thumbnail_height"
                 android:layout_alignParentLeft="true"
-                android:layout_marginRight="16dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
                 android:adjustViewBounds="true"
-                android:paddingLeft="24dp" />
+                tools:src="@drawable/movie_launcher" />
 
             <TextView
                 android:id="@+id/release_year"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/image_poster"
-                android:text="Release Year"
                 android:textAppearance="?android:textAppearanceLarge"
-                android:textColor="#26A69A" />
+                android:textColor="@color/teal_400"
+                tools:text="Release Year" />
 
             <TextView
                 android:id="@+id/user_rating"
@@ -53,9 +55,9 @@
                 android:layout_below="@id/release_year"
                 android:layout_marginTop="8dp"
                 android:layout_toRightOf="@id/image_poster"
-                android:text="User Rating"
                 android:textAppearance="?android:textAppearanceLarge"
-                android:textColor="#009688" />
+                android:textColor="@color/teal"
+                tools:text="User Rating" />
 
             <TextView
                 android:id="@+id/release_date"
@@ -64,36 +66,32 @@
                 android:layout_below="@id/user_rating"
                 android:layout_marginTop="8dp"
                 android:layout_toRightOf="@id/image_poster"
-                android:text="Release date"
+                tools:text="Release date"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="#9E9E9E" />
+                android:textColor="@color/grey_700" />
 
             <Button
+                android:id="@+id/favorite_button"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/release_date"
                 android:layout_marginTop="8dp"
                 android:layout_toRightOf="@id/image_poster"
-                android:background="#80CBC4"
+                android:background="@color/teal_200"
                 android:text="Mark as Favorite"
-                android:textColor="#78909C"></Button>
+                android:textColor="@color/bluegrey_400" />
         </RelativeLayout>
 
-    </ScrollView>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.35">
 
         <TextView
             android:id="@+id/summary"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:text="Plot Summary" />
-    </ScrollView>
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:fontFamily="sans-serif-light"
+            android:textAppearance="?android:textAppearanceSmall"
+            tools:text="Plot Summary" />
 
-
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

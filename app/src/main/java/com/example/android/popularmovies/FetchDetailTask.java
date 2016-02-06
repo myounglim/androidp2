@@ -56,6 +56,10 @@ public class FetchDetailTask extends AsyncTask<Long, Void, Void> {
 
         //https://api.themoviedb.org/3/movie/[ID]/videos?api_key=[YOUR_API_KEY]
         //https://api.themoviedb.org/3/movie/[ID]/reviews?api_key=[YOUR_API_KEY]
+
+        //videos and reviews appeneded for single api call
+        //https://api.themoviedb.org/3/movie/[ID]?api_key=[]&append_to_response=videos,reviews
+
         //image poster path sample
         //http://image.tmdb.org/t/p/w185/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
         try {
@@ -65,12 +69,21 @@ public class FetchDetailTask extends AsyncTask<Long, Void, Void> {
             final String videoPath = "videos";
             final String sort_param = "sort_by";
             final String api_param = "api_key";
+            final String append_to_response = "append_to_response";
+            final String trailerReviewParam = "videos,reviews";
+
+//            Uri builtUri = Uri.parse(MOVIEDB_BASE_URL).buildUpon()
+//                    .appendPath(moviePath)
+//                    .appendPath(Long.toString(id))
+//                    .appendPath(videoPath)
+//                    .appendQueryParameter(api_param, myAPI_KEY)
+//                    .build();
 
             Uri builtUri = Uri.parse(MOVIEDB_BASE_URL).buildUpon()
                     .appendPath(moviePath)
                     .appendPath(Long.toString(id))
-                    .appendPath(videoPath)
                     .appendQueryParameter(api_param, myAPI_KEY)
+                    .appendQueryParameter(append_to_response, trailerReviewParam)
                     .build();
 
             URL url = new URL(builtUri.toString());
@@ -144,14 +157,38 @@ public class FetchDetailTask extends AsyncTask<Long, Void, Void> {
     private void getMovieDataFromJson(String movieJsonStr, long movieId)
             throws JSONException, IOException {
 
+        int totalTrailerResults = 0;
+
         // Names of the JSON objects that need to be extracted.
-        final String MOVIE_RESULTS = "results";
-        final String TRAILER_TITLE = "name";
-        final String SITE_NAME = "site";
+//        final String MOVIE_RESULTS = "results";
+//        final String TRAILER_TITLE = "name";
+//        final String SITE_NAME = "site";
+//        final String TRAILER_PATH = "key";
+
+        //Names of the JSON objects that need to be extracted.
+        //trailers here
+        final String VIDEO_RESULTS = "videos";
+        final String RESULTS_ARRAY = "results";
+        final String TRAILER_NAME = "name";
+        final String TRAILER_SITE = "site";
         final String TRAILER_PATH = "key";
 
+        //reviews here
+        final String REVIEW_RESULTS = "reviews";
+        final String AUTHOR_NAME = "author";
+        final String REVIEW_CONTENT = "content";
+
+//        JSONObject movieJson = new JSONObject(movieJsonStr);
+//        JSONArray resultsArray = movieJson.getJSONArray(MOVIE_RESULTS);
+
         JSONObject movieJson = new JSONObject(movieJsonStr);
-        JSONArray resultsArray = movieJson.getJSONArray(MOVIE_RESULTS);
+        JSONObject videoObject = movieJson.getJSONObject(VIDEO_RESULTS);
+        JSONArray videoArray = videoObject.getJSONArray(RESULTS_ARRAY);
+
+        totalTrailerResults = videoArray.length();
+
+        JSONObject reviewObject = movieJson.getJSONObject(REVIEW_RESULTS);
+        JSONArray reviewArray = reviewObject.getJSONArray(RESULTS_ARRAY);
 
         Cursor cursor = mContext.getContentResolver().query(
                 MovieContract.MovieGeneral.CONTENT_URI,
@@ -162,22 +199,71 @@ public class FetchDetailTask extends AsyncTask<Long, Void, Void> {
         if (cursor.moveToFirst()) {
             int index = cursor.getColumnIndex(MovieContract.MovieGeneral._ID);
             long _id = cursor.getLong(index);
-            for (int i = 0; i < resultsArray.length(); i++) {
-                // Get the JSON object for each movie
-                JSONObject movieObject = resultsArray.getJSONObject(i);
+//            for (int i = 0; i < resultsArray.length(); i++) {
+//                // Get the JSON object for each movie
+//                JSONObject movieObject = resultsArray.getJSONObject(i);
+//
+//                String title = movieObject.getString(TRAILER_TITLE);
+//                String siteName = movieObject.getString(SITE_NAME);
+//                String trailerPath = movieObject.getString(TRAILER_PATH);
+//
+//                ContentValues movieValues = new ContentValues();
+//                movieValues.put(MovieContract.MovieDetail.COLUMN_GENERAL_KEY, _id);
+//                movieValues.put(MovieContract.MovieDetail.COLUMN_TRAILER_PATH, trailerPath);
+//                movieValues.put(MovieContract.MovieDetail.COLUMN_REVIEW_PATH, "abc");
+//
+//                mContext.getContentResolver().insert(MovieContract.MovieDetail.buildDetailWithId(movieId),
+//                        movieValues);
+//            }
+            Cursor detailCursor = mContext.getContentResolver().query(
+                    MovieContract.MovieDetail.buildDetailWithId(movieId),
+                    null,
+                    MovieContract.MovieDetail.COLUMN_GENERAL_KEY + " = ? ",
+                    new String[]{Long.toString(_id)},
+                    null);
 
-                String title = movieObject.getString(TRAILER_TITLE);
-                String siteName = movieObject.getString(SITE_NAME);
-                String trailerPath = movieObject.getString(TRAILER_PATH);
+            if(detailCursor.moveToFirst()){
+                Log.v(LOG_TAG, "ALREADY EXISTS");
+                detailCursor.close();
+                return;
+            }
+            detailCursor.close();
+
+            for(int i=0; i<videoArray.length(); i++){
+                JSONObject trailerObject = videoArray.getJSONObject(i);
+
+                String title = trailerObject.getString(TRAILER_NAME);
+                String siteName = trailerObject.getString(TRAILER_SITE);
+                String trailerPath = trailerObject.getString(TRAILER_PATH);
+
+                Log.v(LOG_TAG, "Trailer title: " + title);
+                Log.v(LOG_TAG, "Site name: " + siteName);
+                Log.v(LOG_TAG, "Path to trailer: " + trailerPath);
 
                 ContentValues movieValues = new ContentValues();
-
                 movieValues.put(MovieContract.MovieDetail.COLUMN_GENERAL_KEY, _id);
                 movieValues.put(MovieContract.MovieDetail.COLUMN_TRAILER_PATH, trailerPath);
-                movieValues.put(MovieContract.MovieDetail.COLUMN_REVIEW_PATH, "abc");
+                movieValues.put(MovieContract.MovieDetail.COLUMN_REVIEW_PATH, "");
 
                 mContext.getContentResolver().insert(MovieContract.MovieDetail.buildDetailWithId(movieId),
                         movieValues);
+
+            }
+            for(int i=0; i<reviewArray.length(); i++){
+                JSONObject reviewIndex = reviewArray.getJSONObject(i);
+
+                String author = reviewIndex.getString(AUTHOR_NAME);
+                String review = reviewIndex.getString(REVIEW_CONTENT);
+
+                Log.v(LOG_TAG, "Author: " + author);
+                Log.v(LOG_TAG, "Review: " + review);
+
+                ContentValues reviewValues = new ContentValues();
+                reviewValues.put(MovieContract.MovieDetail.COLUMN_GENERAL_KEY, _id);
+                reviewValues.put(MovieContract.MovieDetail.COLUMN_TRAILER_PATH, "");
+                reviewValues.put(MovieContract.MovieDetail.COLUMN_REVIEW_PATH, review);
+
+                mContext.getContentResolver().insert(MovieContract.MovieDetail.buildDetailWithId(movieId), reviewValues);
             }
         }
         cursor.close();

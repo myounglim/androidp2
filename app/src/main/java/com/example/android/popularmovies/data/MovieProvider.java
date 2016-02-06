@@ -239,6 +239,10 @@ public class MovieProvider extends ContentProvider {
                 rowsUpdated = db.update(MovieContract.MovieGeneral.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
+            case MOVIES_FAVORITES:
+                rowsUpdated = db.update(MovieContract.MovieGeneral.TABLE_NAME, values, sMovieIdSelection,
+                        selectionArgs);
+                break;
             case MOVIE_DETAIL:
                 rowsUpdated = db.update(MovieContract.MovieDetail.TABLE_NAME, values, selection,
                         selectionArgs);

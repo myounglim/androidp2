@@ -1,13 +1,16 @@
 package com.example.android.popularmovies;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 
 import android.support.v4.app.LoaderManager;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
@@ -59,6 +64,11 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
     static final int COL_USER_RATING = 5;
     static final int COL_MOVIE_SYNOPSIS = 6;
     static final int COL_USER_FAVORITES = 7;
+
+
+    static final int SORT_BY_MOST_POPULAR = 0;
+    static final int SORT_BY_TOP_RATED = 1;
+    static final int SORT_BY_FAVORITES = 2;
 
     public MovieFragment() {
     }
@@ -130,9 +140,28 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String sortOrder = null;
-        if(Utility.sortByRatings(getActivity()))
-            sortOrder = MovieContract.MovieGeneral.COLUMN_USER_RATING + " DESC";
-        Uri movieUri = MovieContract.MovieGeneral.CONTENT_URI;
+        int sortPreference = Utility.sortByRatings(getActivity());
+        Uri movieUri = MovieContract.MovieGeneral.CONTENT_URI;;
+        switch(sortPreference){
+            case SORT_BY_TOP_RATED: {
+                Log.v(LOG_TAG, "sorting by top rated");
+                sortOrder = MovieContract.MovieGeneral.COLUMN_USER_RATING + " DESC";
+                //movieUri = MovieContract.MovieGeneral.CONTENT_URI;
+                break;
+            }
+            case SORT_BY_FAVORITES: {
+                Log.v(LOG_TAG, "sorting by favorites");
+                movieUri = MovieContract.MovieGeneral.buildFavoritesUri();
+                break;
+            }
+            case SORT_BY_MOST_POPULAR: {
+                Log.v(LOG_TAG, "sorting by most popular");
+                //movieUri = MovieContract.MovieGeneral.CONTENT_URI;
+                break;
+            }
+        }
+
+
         return new CursorLoader(getActivity(),
                 movieUri,
                 MOVIE_COLUMNS,

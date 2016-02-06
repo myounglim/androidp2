@@ -13,7 +13,7 @@ public class MainActivity extends ActionBarActivity {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     private final String MOVIEFRAGMENT_TAG = "MFTAG";
 
-    private boolean mSortByRating;
+    private int mSortByRating;
 
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        boolean sort = Utility.sortByRatings(this);
+        int sort = Utility.sortByRatings(this);
         // update the location in our second pane using the fragment manager
         if (sort != mSortByRating) {
             MovieFragment mf = (MovieFragment)getSupportFragmentManager().findFragmentByTag(MOVIEFRAGMENT_TAG);
