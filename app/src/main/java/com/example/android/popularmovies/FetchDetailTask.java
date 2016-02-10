@@ -245,8 +245,19 @@ public class FetchDetailTask extends AsyncTask<Long, Void, Void> {
                 movieValues.put(MovieContract.MovieDetail.COLUMN_TRAILER_PATH, trailerPath);
                 movieValues.put(MovieContract.MovieDetail.COLUMN_REVIEW_PATH, "");
 
+                ContentValues trailerValues = new ContentValues();
+                trailerValues.put(MovieContract.MovieTrailer.COLUMN_MOVIES_KEY, _id);
+                trailerValues.put(MovieContract.MovieTrailer.COLUMN_TRAILER_PATH, trailerPath);
+                trailerValues.put(MovieContract.MovieTrailer.COLUMN_TRAILER_TITLE, title);
+                trailerValues.put(MovieContract.MovieTrailer.COLUMN_TRAILER_SITE, siteName);
+
                 mContext.getContentResolver().insert(MovieContract.MovieDetail.buildDetailWithId(movieId),
                         movieValues);
+
+                Log.v(LOG_TAG, "Adding to movietrailer table");
+                mContext.getContentResolver().insert(MovieContract.MovieTrailer.buildTrailerUri(movieId),
+                        trailerValues);
+
 
             }
             for(int i=0; i<reviewArray.length(); i++){
@@ -263,7 +274,15 @@ public class FetchDetailTask extends AsyncTask<Long, Void, Void> {
                 reviewValues.put(MovieContract.MovieDetail.COLUMN_TRAILER_PATH, "");
                 reviewValues.put(MovieContract.MovieDetail.COLUMN_REVIEW_PATH, review);
 
+                ContentValues reviewValue = new ContentValues();
+                reviewValue.put(MovieContract.MovieReview.COLUMN_MOVIES_KEY, _id);
+                reviewValue.put(MovieContract.MovieReview.COLUMN_REVIEW, review);
+                reviewValue.put(MovieContract.MovieReview.COLUMN_AUTHOR, author);
+
                 mContext.getContentResolver().insert(MovieContract.MovieDetail.buildDetailWithId(movieId), reviewValues);
+
+                Log.v(LOG_TAG, "Adding to review table");
+                mContext.getContentResolver().insert(MovieContract.MovieReview.buildReviewUri(movieId), reviewValue);
             }
         }
         cursor.close();

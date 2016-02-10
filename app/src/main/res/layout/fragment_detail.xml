@@ -92,6 +92,61 @@
             android:fontFamily="sans-serif-light"
             android:textAppearance="?android:textAppearanceSmall"
             tools:text="Plot Summary" />
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="4dp"
+            android:background="@android:color/black"/>
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="4dp"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:text="Trailers"/>
+        
+        <ListView
+            android:id="@+id/listview_trailers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:divider="#000"
+            android:dividerHeight="1dp"
+            android:footerDividersEnabled="false"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="4dp"
+            android:background="@android:color/black"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="4dp"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:text="Reviews"/>
+
+        <ListView
+            android:id="@+id/listview_reviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:divider="#000"
+            android:dividerHeight="1dp"
+            android:footerDividersEnabled="false"/>
+
 
     </LinearLayout>
 </ScrollView>

@@ -106,7 +106,9 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
                 if (cursor != null) {
                     long movie_id = cursor.getLong(COL_MOVIE_ID);
                     Intent intent = new Intent(getActivity(), DetailActivity.class)
-                            .setData(MovieContract.MovieDetail.buildDetailWithId(movie_id));
+                            .setData(MovieContract.MovieDetail.buildDetailWithId(movie_id))
+                            .putExtra(DetailFragment.TRAILER_URI, MovieContract.MovieTrailer.buildTrailerUri(movie_id))
+                            .putExtra(DetailFragment.REVIEW_URI, MovieContract.MovieReview.buildReviewUri(movie_id));
                     startActivity(intent);
                 }
             }

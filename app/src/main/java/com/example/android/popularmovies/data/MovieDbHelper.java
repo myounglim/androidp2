@@ -3,6 +3,7 @@ package com.example.android.popularmovies.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Movie;
 
 /**
  * Manages a local database creation for movie data.
@@ -10,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class MovieDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 10;
 
     static final String DATABASE_NAME = "movie.db";
 
@@ -64,9 +65,38 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 // per location, it's created a UNIQUE constraint with REPLACE strategy
                 //"UNIQUE (" + MovieContract.MovieDetail.COLUMN_GENERAL_KEY + ") ON CONFLICT REPLACE);";
 
+        //CREATE TABLE movie_trailer (_id INTEGER PRIMARY KEY, movies_id INTEGER NOT NULL, trailer_path TEXT NOT NULL, trailer_title TEXT, trailer_site TEXT, FOREIGN KEY (movies_id) REFERENCES
+        //movie_general (_id) ON DELETE CASCADE ON UPDATE CASCADE);
+        final String SQL_CREATE_TRAILER_TABLE = "CREATE TABLE " + MovieContract.MovieTrailer.TABLE_NAME + " (" +
+                MovieContract.MovieTrailer._ID + " INTEGER PRIMARY KEY, " +
+                MovieContract.MovieTrailer.COLUMN_MOVIES_KEY + " INTEGER NOT NULL, " +
+                MovieContract.MovieTrailer.COLUMN_TRAILER_PATH + " TEXT NOT NULL, " +
+                MovieContract.MovieTrailer.COLUMN_TRAILER_TITLE + " TEXT, " +
+                MovieContract.MovieTrailer.COLUMN_TRAILER_SITE + " TEXT, " +
+                // Set up the location column as a foreign key to location table.
+                "FOREIGN KEY (" + MovieContract.MovieTrailer.COLUMN_MOVIES_KEY + ") REFERENCES " +
+                MovieContract.MovieGeneral.TABLE_NAME + " (" + MovieContract.MovieGeneral._ID + ") ON DELETE CASCADE ON UPDATE CASCADE);";
+
+        //CREATE TABLE movie_review (_id INTEGER PRIMARY KEY, movies_id INTEGER NOT NULL, review TEXT NOT NULL, author TEXT, FOREIGN KEY (movies_id) REFERENCES movie_general (_id) ON DELETE CASCADE
+        //ON UPDATE CASCADE);
+        final String SQL_CREATE_REVIEW_TABLE = "CREATE TABLE " + MovieContract.MovieReview.TABLE_NAME + " (" +
+                MovieContract.MovieReview._ID + " INTEGER PRIMARY KEY, " +
+                MovieContract.MovieReview.COLUMN_MOVIES_KEY + " INTEGER NOT NULL, " +
+                MovieContract.MovieReview.COLUMN_REVIEW + " TEXT NOT NULL, " +
+                MovieContract.MovieReview.COLUMN_AUTHOR + " TEXT, " +
+                // Set up the location column as a foreign key to location table.
+                "FOREIGN KEY (" + MovieContract.MovieReview.COLUMN_MOVIES_KEY + ") REFERENCES " +
+                MovieContract.MovieGeneral.TABLE_NAME + " (" + MovieContract.MovieGeneral._ID + ") ON DELETE CASCADE ON UPDATE CASCADE);";
+
+        //CREATE TABLE location_table (_id INTEGER PRIMARY KEY,location_setting TEXT UNIQUE NOT NULL, city_name TEXT NOT NULL, coord_lat REAL NOT NULL, coord_long REAL NOT NULL );
+
+        //CREATE TABLE weather_table (_id INTEGER PRIMARY KEY AUTHOINCREMENT,loc_key INTEGER NOT NULL, date INTEGER NOT NULL, degrees REAL NOT NULL, FOREIGN KEY (loc_key) REFERENCES
+        //location_table (_id), UNIQUE (date, loc_key) ON CONFLICT REPLACE);
 
         db.execSQL(SQL_CREATE_MOVIE_TABLE);
         db.execSQL(SQL_CREATE_DETAIL_TABLE);
+        db.execSQL(SQL_CREATE_TRAILER_TABLE);
+        db.execSQL(SQL_CREATE_REVIEW_TABLE);
     }
 
     @Override
@@ -79,6 +109,8 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         // should be your top priority before modifying this method.
         db.execSQL("DROP TABLE IF EXISTS " + MovieContract.MovieGeneral.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + MovieContract.MovieDetail.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MovieContract.MovieTrailer.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MovieContract.MovieReview.TABLE_NAME);
         onCreate(db);
     }
 }

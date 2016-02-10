@@ -23,6 +23,8 @@ public class MovieContract {
     // Possible paths (appended to base content URI for possible URI's)
     public static final String PATH_MOVIE_GENERAL = "movie_general";
     public static final String PATH_MOVIE_DETAIL = "movie_detail";
+    public static final String PATH_MOVIE_TRAILER = "movie_trailer";
+    public static final String PATH_MOVIE_REVIEW = "movie_review";
 
     /* Inner class that defines the table contents of the movie table */
     public static final class MovieGeneral implements BaseColumns{
@@ -43,20 +45,26 @@ public class MovieContract {
 
         // Table name
         public static final String TABLE_NAME = "movie_general";
-        //Long
+
+        //Long - the ID used by MOVIEDB API to identify each movie
         public static final String COLUMN_MOVIE_ID = "movie_id";
+
         //String
         public static final String COLUMN_MOVIE_TITLE = "title";
+
         //String
         public static final String COLUMN_POSTER_PATH = "poster_path";
+
         //String
         public static final String COLUMN_RELEASE_DATE = "release_date";
+
         //Float
         public static final String COLUMN_USER_RATING = "user_rating";
+
         //String
         public static final String COLUMN_MOVIE_SYNOPSIS = "synopsis";
 
-        //Integer(0 for false, 1 for true)
+        //Integer(0 for not favorite, 1 for favorited)
         public static final String COLUMN_USER_FAVORITES = "favorite";
 
         // for building URIs on insertion
@@ -106,9 +114,64 @@ public class MovieContract {
         public static long getMovieIdFromUri(Uri uri){
             return Long.parseLong(uri.getPathSegments().get(1));
         }
-
-
-
     } //end of MovieDetail class
+
+    public static final class MovieTrailer implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIE_TRAILER).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE_TRAILER;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE_TRAILER;
+
+        public static final String TABLE_NAME = "movie_trailer";
+
+        //the foreign key that links to the movie general table
+        public static final String COLUMN_MOVIES_KEY = "movies_id";
+
+        //String - the path for the trailer
+        public static final String COLUMN_TRAILER_PATH = "trailer_path";
+
+        //String - the site the trailer is displayed
+        public static final String COLUMN_TRAILER_SITE = "site";
+
+        //String - the title of the trailer
+        public static final String COLUMN_TRAILER_TITLE = "trailer_title";
+
+        // for building URIs on insertion
+        public static Uri buildTrailerUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+    }
+
+    public static final class MovieReview implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIE_REVIEW).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE_REVIEW;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE_REVIEW;
+
+        public static final String TABLE_NAME = "movie_review";
+
+        //the foreign key that links to the movie general table
+        public static final String COLUMN_MOVIES_KEY = "movies_id";
+
+        //String - the review
+        public static final String COLUMN_REVIEW = "review";
+
+        //String - the author of the review
+        public static final String COLUMN_AUTHOR = "review_author";
+
+        // for building URIs on insertion
+        public static Uri buildReviewUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+    }
+
+
 
 }
